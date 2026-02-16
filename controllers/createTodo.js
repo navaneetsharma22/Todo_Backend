@@ -1,36 +1,75 @@
-//import the model
+// import the model
 const Todo = require("../models/Todo");
 
+// CREATE TODO
+exports.createTodo = async (req, res) => {
+  try {
+    const { title, description } = req.body;
 
-//define route handler 
+    const response = await Todo.create({ title, description });
 
-exports.createTodo = async (req,res) => {
-    try{
-        //extract title and description from request body
-        const{ title, description } = req.body;
-        //create a new Todo Obj and insert in DB
-        const response = await Todo.create({
-            title,description
-        });
-        //send a json response with a success flag
-        res.status(200).json({
-            success:true,
-            data:response,
-            message:'Entry Created Successfully'
-        });
+    res.status(200).json({
+      success: true,
+      data: response,
+      message: "Entry Created Successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      data: "internal server error",
+      message: err.message,
+    });
+  }
+};
 
-    }
-    catch(err){
-        console.error(err);
-        console.log(err);
-        res.status(500)
-        .json({
-            success:false,
-            data:"interal server error",
-            message:err.message,
+// // GET ALL TODOS ✅ (THIS WAS MISSING)
+// exports.getTodos = async (req, res) => {
+//   try {
+//     const todos = await Todo.find({});
 
-        })
+//     res.status(200).json({
+//       success: true,
+//       data: todos,
+//       message: "Todos fetched successfully",
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({
+//       success: false,
+//       data: "internal server error",
+//       message: err.message,
+//     });
+//   }
+// };
 
 
-    }
-}
+// // GET TODO BY ID
+// exports.getTodoById = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+
+//     const todo = await Todo.findById(id);
+
+//     if (!todo) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Todo not found",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       data: todo,
+//       message: `Todo ${id} fetched successfully`,
+//     });
+
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     });
+//   }
+// };
+
